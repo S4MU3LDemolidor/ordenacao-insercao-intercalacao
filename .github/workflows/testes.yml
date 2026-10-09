@@ -1,0 +1,28 @@
+# Roda os testes e uma medição curta em Linux, Windows e macOS, com a versão
+# mais antiga e a mais nova do Python suportadas, a cada push.
+name: testes
+
+on: [push, pull_request]
+
+jobs:
+  testes:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Testes (só biblioteca padrão)
+        run: python testes.py
+      - name: Instala o matplotlib
+        run: python -m pip install -r requirements.txt
+      - name: medir.py --rapido (gera CSVs e gráficos)
+        run: python medir.py --rapido
+      - name: Confere que os arquivos foram gerados
+        shell: bash
+        run: ls -l dados.csv dados_virada.csv dados_quase_ordenada.csv graficos/tempos.png graficos/comparacoes.png graficos/virada.png graficos/quase_ordenada.png
