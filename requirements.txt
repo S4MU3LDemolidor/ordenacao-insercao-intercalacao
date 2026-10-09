@@ -1,0 +1,3 @@
+# Só o medir.py precisa disto (para desenhar os gráficos).
+# ordenacao.py e testes.py usam apenas a biblioteca padrão do Python.
+matplotlib>=3.6
